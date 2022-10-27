@@ -1,27 +1,26 @@
-from src.model.canvas import Canvas
-from src.model.sprite import Sprite
-from src.ui.renderer import Renderer
+from ascii_renderer.screen import Screen
+from ascii_renderer.renderer import Renderer
+from ascii_renderer.char import Char
 
 
 def main():
-    canvas = Canvas(25, 6)
-    renderer = Renderer(canvas)
+    screen = Screen(25, 6)
+    renderer = Renderer(print, screen)
 
-    character = Sprite('$')
-    horizontal_wall = Sprite('_')
-    vertical_wall = Sprite('|')
+    character = Char('$')
+    horizontal_wall = Char('_')
+    vertical_wall = Char('|')
 
-    for i in range(1, canvas.width - 1):
-        canvas.draw(horizontal_wall, i, 0)
-        canvas.draw(horizontal_wall, i, canvas.height - 1)
+    for i in range(1, screen.width - 1):
+        screen.draw(horizontal_wall, i, 0)
+        screen.draw(horizontal_wall, i, screen.height - 1)
 
-    for i in range(1, canvas.height):
-        canvas.draw(vertical_wall, 0, i)
-        canvas.draw(vertical_wall, canvas.width - 1, i)
+    for i in range(1, screen.height):
+        screen.draw(vertical_wall, 0, i)
+        screen.draw(vertical_wall, screen.width - 1, i)
 
-    canvas.draw(character, int(canvas.width / 2), int(canvas.height / 2))
-    print(str([character, horizontal_wall, vertical_wall]))
-    renderer.render_to_console()
+    screen.draw(character, int(screen.width / 2), int(screen.height / 2))
+    renderer.render()
 
 
 if __name__ == "__main__":
