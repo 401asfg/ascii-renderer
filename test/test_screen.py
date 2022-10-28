@@ -1,7 +1,6 @@
 import unittest
 from typing import List
 
-from ascii_renderer.special_chars import EMPTY_SPACE, NEW_LINE
 from ascii_renderer.screen import Screen
 from ascii_renderer.sprite import Sprite
 
@@ -10,24 +9,56 @@ class TestScreen(unittest.TestCase):
     WIDTH = 10
     HEIGHT = 4
 
+    empty_space_sprite: Sprite
     screen: Screen
     sprite_grid: List[List[Sprite]]
 
+    def set_sprite_grid_empty(self, empty_space_sprite: Sprite, width: int, height: int):
+        self.sprite_grid = [[empty_space_sprite for _ in range(width)] for _ in range(height)]
+
     def setUp(self) -> None:
-        self.screen = Screen(self.WIDTH, self.HEIGHT)
-        self.sprite_grid = [[Sprite(EMPTY_SPACE) for _ in range(self.WIDTH)] for _ in range(self.HEIGHT)]
+        self.empty_space_sprite = Sprite(' ')
+        self.screen = Screen(self.empty_space_sprite, self.WIDTH, self.HEIGHT)
+        self.set_sprite_grid_empty(self.empty_space_sprite, self.WIDTH, self.HEIGHT)
 
     def assert_matching(self):
         self.assertTrue(self.screen.is_match(self.sprite_grid))
 
     def test_init(self):
-        self.assertEqual(self.WIDTH, self.screen.width)
-        self.assertEqual(self.HEIGHT, self.screen.height)
-        self.assert_matching()
+        def assert_init(empty_space_sprite: Sprite, width: int, height: int):
+            self.screen = Screen(empty_space_sprite, width, height)
+            self.set_sprite_grid_empty(empty_space_sprite, width, height)
+
+            self.assertEqual(empty_space_sprite, self.screen.empty_space_sprite)
+            self.assertEqual(width, self.screen.width)
+            self.assertEqual(height, self.screen.height)
+            self.assert_matching()
+
+        assert_init(self.empty_space_sprite, self.WIDTH, self.HEIGHT)
+
+        assert_init(self.empty_space_sprite, 0, 0)
+        assert_init(self.empty_space_sprite, 1, 0)
+        assert_init(self.empty_space_sprite, 0, 1)
+        assert_init(self.empty_space_sprite, 1, 1)
+        assert_init(self.empty_space_sprite, 0, 0)
+
+        assert_init(self.empty_space_sprite, 3, 9)
+        assert_init(self.empty_space_sprite, 27, 27)
+        assert_init(self.empty_space_sprite, 34, 534)
+
+        assert_init(Sprite('.'), 0, 0)
+        assert_init(Sprite('a'), 1, 0)
+        assert_init(Sprite('x'), 0, 1)
+        assert_init(Sprite('d'), 1, 1)
+        assert_init(Sprite('f'), 0, 0)
+
+        assert_init(Sprite('/'), 3, 9)
+        assert_init(Sprite(','), 27, 27)
+        assert_init(Sprite('_'), 34, 534)
 
         def assert_fail(width: int, height: int):
             try:
-                Screen(width, height)
+                Screen(Sprite(' '), width, height)
                 self.fail()
             except ValueError:
                 pass
@@ -145,7 +176,7 @@ class TestScreen(unittest.TestCase):
                 char = str(x * y)[:1]
                 self.screen.draw(Sprite(char), x, y)
                 expected_render += char
-            expected_render += NEW_LINE
+            expected_render += '\n'
 
         self.assertEqual(expected_render, self.screen.render())
 

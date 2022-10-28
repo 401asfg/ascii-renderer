@@ -19,7 +19,7 @@ class TestRenderer(unittest.TestCase):
         self.render_output = msg
 
     def setUp(self) -> None:
-        self.screen = Screen(self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
+        self.screen = Screen(Sprite(' '), self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         self.renderer = Renderer(self.send_to_render_output, self.screen)
 
     def test_init(self):

@@ -1,6 +1,5 @@
 from typing import List
 
-from ascii_renderer.special_chars import EMPTY_SPACE, NEW_LINE
 from ascii_renderer.sprite import Sprite
 
 
@@ -9,14 +8,16 @@ class Screen:
     A grid onto which sprites can be drawn
     """
 
+    _empty_space_sprite: Sprite
     _width: int
     _height: int
     _grid: List[List[Sprite]]
 
-    def __init__(self, width: int, height: int):
+    def __init__(self, empty_space_sprite: Sprite, width: int, height: int):
         """
         Initializes the class; the entire screen is just empty space
 
+        :param empty_space_sprite: A sprite representing empty space
         :param width: The width of the screen
         :param height: The height of the screen
         :raise ValueError: If the width or height < 0
@@ -24,6 +25,7 @@ class Screen:
         if width < 0 or height < 0:
             raise ValueError(f'Attempted to create a screen with the following dimensions: {width}x{height}')
 
+        self._empty_space_sprite = empty_space_sprite
         self._width = width
         self._height = height
         self.clear()
@@ -32,7 +34,7 @@ class Screen:
         """
         Make the screen composed of only empty space with its assigned width and height
         """
-        self._grid = [[Sprite(EMPTY_SPACE) for _ in range(self.width)] for _ in range(self.height)]
+        self._grid = [[self.empty_space_sprite for _ in range(self.width)] for _ in range(self.height)]
 
     def draw(self, sprite: Sprite, x: int, y: int):
         """
@@ -63,7 +65,7 @@ class Screen:
                 sprite = row[x]
                 render += sprite.render()
 
-            render += NEW_LINE
+            render += '\n'
 
         return render
 
@@ -81,6 +83,10 @@ class Screen:
         :return: True if the given sprite_grid matches that of this screen
         """
         return self._grid == sprite_grid
+
+    @property
+    def empty_space_sprite(self) -> Sprite:
+        return self._empty_space_sprite
 
     @property
     def width(self) -> int:
