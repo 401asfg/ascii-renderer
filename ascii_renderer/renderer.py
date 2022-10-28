@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Any, Callable, Coroutine
 
 from ascii_renderer.screen import Screen
 
@@ -8,10 +8,10 @@ class Renderer:
     Renders a screen
     """
 
-    _send_to_output: Callable[[str], None]
+    _send_to_output: Callable[[str], Coroutine[Any, Any, None]]
     _screen: Screen
 
-    def __init__(self, send_to_output: Callable[[str], None], screen: Screen):
+    def __init__(self, send_to_output: Callable[[str], Coroutine[Any, Any, None]], screen: Screen):
         """
         Initializes the class
 
@@ -22,15 +22,15 @@ class Renderer:
         self._send_to_output = send_to_output
         self._screen = screen
 
-    def render(self):       # TODO: will this work if send-message is async?
+    async def render(self):
         """
         Renders the ascii characters from the screen to the output, specified in the send_to_output function
         """
         screen_render = self.screen.render()
-        self.send_to_output(screen_render)
+        await self.send_to_output(screen_render)
 
     @property
-    def send_to_output(self) -> Callable[[str], None]:
+    def send_to_output(self) -> Callable[[str], Coroutine[Any, Any, None]]:
         return self._send_to_output
 
     @property

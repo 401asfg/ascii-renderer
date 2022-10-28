@@ -26,9 +26,9 @@ class Screen:
 
         self._width = width
         self._height = height
-        self.reset()
+        self.clear()
 
-    def reset(self):        # TODO: rename back to clear
+    def clear(self):
         """
         Make the screen composed of only empty space with its assigned width and height
         """

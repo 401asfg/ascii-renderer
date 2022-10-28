@@ -38,11 +38,6 @@ class TestScreen(unittest.TestCase):
         assert_fail(-1, 1)
         assert_fail(1, -1)
 
-    def test_clear(self):       # TODO: make actually call clear and have things to clear
-        self.assertEqual(self.WIDTH, self.screen.width)
-        self.assertEqual(self.HEIGHT, self.screen.height)
-        self.assert_matching()
-
     def test_in_frame(self):
         def assert_in_frame(x: int, y: int):
             self.assertTrue(self.screen.in_frame(x, y))
@@ -128,6 +123,19 @@ class TestScreen(unittest.TestCase):
         assert_draw('i', self.WIDTH - 1, self.HEIGHT - 1)
 
         assert_draw('b', 0, 0)
+
+    def test_clear(self):
+        self.screen.draw(Char('a'), 0, 0)
+        self.screen.draw(Char('b'), self.WIDTH - 1, self.HEIGHT - 1)
+        self.screen.draw(Char('c'), int(self.WIDTH / 2), int(self.HEIGHT / 2))
+        self.screen.draw(Char('d'), int(self.WIDTH / 5), int(self.HEIGHT / 7))
+        self.screen.draw(Char('e'), int(self.WIDTH / 4), int(self.HEIGHT / 3))
+
+        self.screen.clear()
+
+        self.assertEqual(self.WIDTH, self.screen.width)
+        self.assertEqual(self.HEIGHT, self.screen.height)
+        self.assert_matching()
 
     def test_render(self):
         expected_render = ""
