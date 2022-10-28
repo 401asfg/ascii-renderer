@@ -1,7 +1,7 @@
 from typing import List
 
 from ascii_renderer.special_chars import EMPTY_SPACE, NEW_LINE
-from ascii_renderer.char import Char
+from ascii_renderer.sprite import Sprite
 
 
 class Screen:
@@ -11,7 +11,7 @@ class Screen:
 
     _width: int
     _height: int
-    _grid: List[List[Char]]  # TODO: using this instead of just a string to allow grid to store full sprite object info
+    _grid: List[List[Sprite]]
 
     def __init__(self, width: int, height: int):
         """
@@ -32,9 +32,9 @@ class Screen:
         """
         Make the screen composed of only empty space with its assigned width and height
         """
-        self._grid = [[Char(EMPTY_SPACE) for _ in range(self.width)] for _ in range(self.height)]
+        self._grid = [[Sprite(EMPTY_SPACE) for _ in range(self.width)] for _ in range(self.height)]
 
-    def draw(self, sprite: Char, x: int, y: int):
+    def draw(self, sprite: Sprite, x: int, y: int):
         """
         Draws the given sprite onto the screen at the given x and y coordinates
 
@@ -48,7 +48,7 @@ class Screen:
 
         self._grid[y][x] = sprite
 
-    def render(self) -> str:  # TODO: would this work with more complex sprites?
+    def render(self) -> str:
         """
         Renders the screen
 
@@ -60,7 +60,8 @@ class Screen:
             row = self._grid[y]
 
             for x in range(self.width):
-                render += str(row[x])
+                sprite = row[x]
+                render += sprite.render()
 
             render += NEW_LINE
 
@@ -74,7 +75,7 @@ class Screen:
         """
         return 0 <= x < self.width and 0 <= y < self.height
 
-    def is_match(self, sprite_grid: List[List[Char]]) -> bool:  # TODO: find better way to do a simple comparison
+    def is_match(self, sprite_grid: List[List[Sprite]]) -> bool:
         """
         :param sprite_grid: The sprite grid to compare this screen to
         :return: True if the given sprite_grid matches that of this screen

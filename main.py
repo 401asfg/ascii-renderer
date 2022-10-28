@@ -2,7 +2,7 @@ import asyncio
 
 from ascii_renderer.screen import Screen
 from ascii_renderer.renderer import Renderer
-from ascii_renderer.char import Char
+from ascii_renderer.sprite import Sprite
 
 
 async def async_print(render: str):
@@ -13,9 +13,9 @@ def main():
     screen = Screen(25, 6)
     renderer = Renderer(async_print, screen)
 
-    character = Char('$')
-    horizontal_wall = Char('_')
-    vertical_wall = Char('|')
+    character = Sprite('$')
+    horizontal_wall = Sprite('_')
+    vertical_wall = Sprite('|')
 
     for i in range(1, screen.width - 1):
         screen.draw(horizontal_wall, i, 0)

@@ -3,7 +3,7 @@ from typing import List
 
 from ascii_renderer.special_chars import EMPTY_SPACE, NEW_LINE
 from ascii_renderer.screen import Screen
-from ascii_renderer.char import Char
+from ascii_renderer.sprite import Sprite
 
 
 class TestScreen(unittest.TestCase):
@@ -11,11 +11,11 @@ class TestScreen(unittest.TestCase):
     HEIGHT = 4
 
     screen: Screen
-    sprite_grid: List[List[Char]]
+    sprite_grid: List[List[Sprite]]
 
     def setUp(self) -> None:
         self.screen = Screen(self.WIDTH, self.HEIGHT)
-        self.sprite_grid = [[Char(EMPTY_SPACE) for _ in range(self.WIDTH)] for _ in range(self.HEIGHT)]
+        self.sprite_grid = [[Sprite(EMPTY_SPACE) for _ in range(self.WIDTH)] for _ in range(self.HEIGHT)]
 
     def assert_matching(self):
         self.assertTrue(self.screen.is_match(self.sprite_grid))
@@ -78,7 +78,7 @@ class TestScreen(unittest.TestCase):
     def test_draw_fail(self):
         def assert_fail(x: int, y: int):
             try:
-                self.screen.draw(Char('x'), x, y)
+                self.screen.draw(Sprite('x'), x, y)
                 self.fail()
             except ValueError:
                 pass
@@ -103,7 +103,7 @@ class TestScreen(unittest.TestCase):
 
     def test_draw_pass(self):
         def assert_draw(sprite_str: str, x: int, y: int):
-            sprite = Char(sprite_str)
+            sprite = Sprite(sprite_str)
 
             self.sprite_grid[y][x] = sprite
             self.screen.draw(sprite, x, y)
@@ -125,11 +125,11 @@ class TestScreen(unittest.TestCase):
         assert_draw('b', 0, 0)
 
     def test_clear(self):
-        self.screen.draw(Char('a'), 0, 0)
-        self.screen.draw(Char('b'), self.WIDTH - 1, self.HEIGHT - 1)
-        self.screen.draw(Char('c'), int(self.WIDTH / 2), int(self.HEIGHT / 2))
-        self.screen.draw(Char('d'), int(self.WIDTH / 5), int(self.HEIGHT / 7))
-        self.screen.draw(Char('e'), int(self.WIDTH / 4), int(self.HEIGHT / 3))
+        self.screen.draw(Sprite('a'), 0, 0)
+        self.screen.draw(Sprite('b'), self.WIDTH - 1, self.HEIGHT - 1)
+        self.screen.draw(Sprite('c'), int(self.WIDTH / 2), int(self.HEIGHT / 2))
+        self.screen.draw(Sprite('d'), int(self.WIDTH / 5), int(self.HEIGHT / 7))
+        self.screen.draw(Sprite('e'), int(self.WIDTH / 4), int(self.HEIGHT / 3))
 
         self.screen.clear()
 
@@ -143,7 +143,7 @@ class TestScreen(unittest.TestCase):
         for y in range(self.HEIGHT):
             for x in range(self.WIDTH):
                 char = str(x * y)[:1]
-                self.screen.draw(Char(char), x, y)
+                self.screen.draw(Sprite(char), x, y)
                 expected_render += char
             expected_render += NEW_LINE
 

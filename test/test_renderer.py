@@ -1,7 +1,7 @@
 import asyncio
 import unittest
 
-from ascii_renderer.char import Char
+from ascii_renderer.sprite import Sprite
 from ascii_renderer.renderer import Renderer
 from ascii_renderer.screen import Screen
 
@@ -33,13 +33,13 @@ class TestRenderer(unittest.TestCase):
 
         assert_render()
 
-        self.screen.draw(Char('a'), 0, 0)
+        self.screen.draw(Sprite('a'), 0, 0)
 
-        self.screen.draw(Char('b'),
+        self.screen.draw(Sprite('b'),
                          int(self.SCREEN_WIDTH / 2),
                          int(self.SCREEN_HEIGHT / 3))
 
-        self.screen.draw(Char('c'),
+        self.screen.draw(Sprite('c'),
                          self.SCREEN_WIDTH - 1,
                          self.SCREEN_HEIGHT - 1)
 
