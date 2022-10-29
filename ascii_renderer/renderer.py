@@ -1,38 +1,37 @@
 from typing import Any, Callable, Coroutine
-
-from ascii_renderer.screen import Screen
+from ascii_renderer.renderable import Renderable
 
 
 class Renderer:
     """
-    Renders a screen
+    Renders a renderable
     """
 
     _send_to_output: Callable[[str], Coroutine[Any, Any, None]]
-    _screen: Screen
+    _renderable: Renderable
 
-    def __init__(self, send_to_output: Callable[[str], Coroutine[Any, Any, None]], screen: Screen):
+    def __init__(self, send_to_output: Callable[[str], Coroutine[Any, Any, None]], renderable: Renderable):
         """
         Initializes the class
 
-        :param send_to_output: The function used to send the given screen's render as a message when this class' render
+        :param send_to_output: The function used to send the given renderable's rendering as a message when this class' render
         function is called
-        :param screen: The screen to render to the output, specified in the given send_to_output function
+        :param renderable: The renderable to render to the output, specified in the given send_to_output function
         """
         self._send_to_output = send_to_output
-        self._screen = screen
+        self._renderable = renderable
 
     async def render(self):
         """
-        Renders the ascii characters from the screen to the output, specified in the send_to_output function
+        Renders the ascii characters from the renderable to the output, specified in the send_to_output function
         """
-        screen_render = self.screen.render()
-        await self.send_to_output(screen_render)
+        rendering = self.renderable.render()
+        await self.send_to_output(rendering)
 
     @property
     def send_to_output(self) -> Callable[[str], Coroutine[Any, Any, None]]:
         return self._send_to_output
 
     @property
-    def screen(self) -> Screen:
-        return self._screen
+    def renderable(self) -> Renderable:
+        return self._renderable

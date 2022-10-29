@@ -1,4 +1,7 @@
-class Sprite:
+from ascii_renderer.renderable import Renderable
+
+
+class Sprite(Renderable):
     """
     A single, renderable ascii character
     """
@@ -18,13 +21,8 @@ class Sprite:
         self._char = char
 
     def render(self) -> str:
-        """
-        Renders the sprite
-
-        :return: A rendering of the sprite
-        """
         return self.char
-
+    
     def __eq__(self, other) -> bool:
         return self.__dict__ == other.__dict__
 

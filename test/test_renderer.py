@@ -24,7 +24,7 @@ class TestRenderer(unittest.TestCase):
 
     def test_init(self):
         self.assertEqual(self.send_to_render_output, self.renderer.send_to_output)
-        self.assertEqual(self.screen, self.renderer.screen)
+        self.assertEqual(self.screen, self.renderer.renderable)
 
     def test_render(self):
         def assert_render():

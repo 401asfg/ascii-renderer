@@ -1,9 +1,10 @@
 from typing import List
+from ascii_renderer.renderable import Renderable
 
 from ascii_renderer.sprite import Sprite
 
 
-class Screen:
+class Screen(Renderable):
     """
     A grid onto which sprites can be drawn
     """
@@ -52,8 +53,6 @@ class Screen:
 
     def render(self) -> str:
         """
-        Renders the screen
-
         :return: The contents of the screen as a single string, with each row as a new line
         """
         render = ""
