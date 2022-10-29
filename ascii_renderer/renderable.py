@@ -11,3 +11,4 @@ class Renderable(ABC):
         """
         :return: A rendering of this class
         """
+        raise NotImplementedError("The renderable's render method has not been implemented")
