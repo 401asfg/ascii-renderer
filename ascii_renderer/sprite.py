@@ -1,6 +1,8 @@
+from dataclasses import dataclass
 from ascii_renderer.renderable import Renderable
 
 
+@dataclass
 class Sprite(Renderable):
     """
     A single, renderable ascii character
@@ -23,9 +25,6 @@ class Sprite(Renderable):
     def render(self) -> str:
         return self.char
     
-    def __eq__(self, other) -> bool:
-        return self.__dict__ == other.__dict__
-
     @property
     def char(self) -> str:
         return self._char
