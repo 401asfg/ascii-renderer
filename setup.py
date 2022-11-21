@@ -6,3 +6,5 @@ setup(name='ascii_renderer',
       author='Michael Allan',
       packages=['ascii_renderer'],
       zip_safe=False)
+
+# TODO: incerment version and install when tests are done
