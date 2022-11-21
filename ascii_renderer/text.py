@@ -1,6 +1,3 @@
-from dataclasses import dataclass
-from typing import List, Tuple
-from ascii_renderer.renderable import Renderable
 from ascii_renderer.sprite import Sprite
 
 
