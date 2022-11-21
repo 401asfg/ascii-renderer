@@ -1,3 +1,4 @@
+from typing import List
 from ascii_renderer.sprite import Sprite
 
 
