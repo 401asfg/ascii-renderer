@@ -6,6 +6,7 @@ from ascii_renderer.sprite import Sprite
 
 
 class TestScreen(unittest.TestCase):
+    EMPTY_SPACE_CHAR = ' '
     WIDTH = 10
     HEIGHT = 4
 
@@ -17,7 +18,7 @@ class TestScreen(unittest.TestCase):
         self.sprite_grid = [[empty_space_sprite for _ in range(width)] for _ in range(height)]
 
     def setUp(self) -> None:
-        self.empty_space_sprite = Sprite(' ')
+        self.empty_space_sprite = Sprite(self.EMPTY_SPACE_CHAR)
         self.screen = Screen(self.empty_space_sprite, self.WIDTH, self.HEIGHT)
         self.set_sprite_grid_empty(self.empty_space_sprite, self.WIDTH, self.HEIGHT)
 
@@ -58,7 +59,7 @@ class TestScreen(unittest.TestCase):
 
         def assert_fail(width: int, height: int):
             try:
-                Screen(Sprite(' '), width, height)
+                Screen(Sprite(self.EMPTY_SPACE_CHAR), width, height)
                 self.fail()
             except ValueError:
                 pass
@@ -155,6 +156,30 @@ class TestScreen(unittest.TestCase):
 
         assert_draw('b', 0, 0)
 
+    # def test_draw_text_completely_inside(self):
+    #     # TODO: write
+
+    # def test_draw_text_top_left_corner(self):
+    #     # TODO: write
+
+    # def test_draw_text_outside_top_left(self):
+    #     # TODO: write
+    
+    # def test_draw_text_outside_bottom_right(self):
+    #     # TODO: write
+    
+    # def test_draw_text_indside_offset_top_left(self):
+    #     # TODO: write
+    
+    # def test_draw_text_inside_offset_bottom_right(self):
+    #     # TODO: write
+
+    # def test_draw_text_partially_inside_but_inside_is_empty_space_top_left(self):
+    #     # TODO: write
+
+    # def test_draw_text_partially_inside_but_inside_is_empty_space_bottom_right(self):
+    #     # TODO: write
+    
     def test_clear(self):
         self.screen.draw(Sprite('a'), 0, 0)
         self.screen.draw(Sprite('b'), self.WIDTH - 1, self.HEIGHT - 1)
@@ -179,6 +204,84 @@ class TestScreen(unittest.TestCase):
             expected_render += '\n'
 
         self.assertEqual(expected_render, self.screen.render())
+
+    def test_overlay_smaller_empty(self):
+        top = Screen(Sprite(self.EMPTY_SPACE_CHAR), 1, 1)
+        top.draw(Sprite(self.EMPTY_SPACE_CHAR), 0, 0)
+
+        self.screen.draw(Sprite('x'), 0, 0)
+        self.sprite_grid[0][0] = Sprite('x')
+
+        top.overlay(self.screen)
+        self.assert_matching()
+
+    def test_overlay_smaller_not_empty(self):
+        top = Screen(Sprite(self.EMPTY_SPACE_CHAR), int(self.WIDTH / 2), int(self.HEIGHT / 2))
+
+        [top.draw(Sprite('x'), x, y)
+         for x in range(top.width) for y in range(top.height)]
+
+        [self.screen.draw(Sprite('y'), x, y)
+         for x in range(self.screen.width) for y in range(self.screen.height)]
+         
+        def set_sprite_grid(char, x, y):
+            self.sprite_grid[y][x] = Sprite(char)
+
+        [set_sprite_grid('y', x, y)
+         for x in range(self.screen.width) for y in range(self.screen.height)]
+
+        [set_sprite_grid('x', x, y)
+         for x in range(top.width) for y in range(top.height)]
+
+        top.overlay(self.screen)
+        self.assert_matching()
+
+    def test_overlay_smaller_empty(self):
+        top = Screen(Sprite(self.EMPTY_SPACE_CHAR), int(self.WIDTH / 2), int(self.HEIGHT / 2))
+
+        [top.draw(Sprite(self.EMPTY_SPACE_CHAR), x, y)
+         for x in range(top.width) for y in range(top.height)]
+
+        [self.screen.draw(Sprite('y'), x, y)
+         for x in range(self.screen.width) for y in range(self.screen.height)]
+         
+        def set_sprite_grid(char, x, y):
+            self.sprite_grid[y][x] = Sprite(char)
+
+        [set_sprite_grid('y', x, y)
+         for x in range(self.screen.width) for y in range(self.screen.height)]
+
+        top.overlay(self.screen)
+        self.assert_matching()
+
+    def test_overlay_same_size(self):
+        top = Screen(Sprite(self.EMPTY_SPACE_CHAR), int(self.WIDTH), int(self.HEIGHT))
+
+        [top.draw(Sprite('x'), x, y)
+         for x in range(int(top.width / 2), top.width)
+         for y in range(int(top.height / 2), top.height)]
+
+        [self.screen.draw(Sprite('y'), x, y)
+         for x in range(self.screen.width) for y in range(self.screen.height)]
+         
+        def set_sprite_grid(char, x, y):
+            self.sprite_grid[y][x] = Sprite(char)
+
+        [set_sprite_grid('y', x, y)
+         for x in range(self.screen.width) for y in range(self.screen.height)]
+
+        [set_sprite_grid('x', x, y)
+         for x in range(int(top.width / 2), top.width)
+         for y in range(int(top.height / 2), top.height)]
+
+        top.overlay(self.screen)
+        self.assert_matching()
+
+    # def test_overlay_larger_not_empty(self):
+    #     # TODO: write
+
+    # def test_overlay_different_empty_spaces(self):
+    #     # TODO: write
 
 
 if __name__ == '__main__':
