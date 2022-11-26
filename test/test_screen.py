@@ -107,10 +107,10 @@ class TestScreen(unittest.TestCase):
         assert_not_in_frame(int(self.WIDTH / 2), self.HEIGHT + 1)
         assert_not_in_frame(self.WIDTH + 1, self.HEIGHT + 1)
 
-    def test_draw_fail(self):
+    def test_draw_sprite_fail(self):
         def assert_fail(x: int, y: int):
             try:
-                self.screen.draw(Sprite('x'), x, y)
+                self.screen.draw_sprite(Sprite('x'), x, y)
                 self.fail()
             except ValueError:
                 pass
@@ -133,28 +133,28 @@ class TestScreen(unittest.TestCase):
         assert_fail(int(self.WIDTH / 2), self.HEIGHT + 1)
         assert_fail(self.WIDTH + 1, self.HEIGHT + 1)
 
-    def test_draw_pass(self):
-        def assert_draw(sprite_str: str, x: int, y: int):
+    def test_draw_sprite_pass(self):
+        def assert_draw_sprite(sprite_str: str, x: int, y: int):
             sprite = Sprite(sprite_str)
 
             self.sprite_grid[y][x] = sprite
-            self.screen.draw(sprite, x, y)
+            self.screen.draw_sprite(sprite, x, y)
 
             self.assert_matching()
 
-        assert_draw('a', 0, 0)
-        assert_draw('b', int(self.WIDTH / 2), 0)
-        assert_draw('c', self.WIDTH - 1, 0)
+        assert_draw_sprite('a', 0, 0)
+        assert_draw_sprite('b', int(self.WIDTH / 2), 0)
+        assert_draw_sprite('c', self.WIDTH - 1, 0)
 
-        assert_draw('d', 0, int(self.HEIGHT / 2))
-        assert_draw('e', int(self.WIDTH / 2), int(self.HEIGHT / 2))
-        assert_draw('f', self.WIDTH - 1, int(self.HEIGHT / 2))
+        assert_draw_sprite('d', 0, int(self.HEIGHT / 2))
+        assert_draw_sprite('e', int(self.WIDTH / 2), int(self.HEIGHT / 2))
+        assert_draw_sprite('f', self.WIDTH - 1, int(self.HEIGHT / 2))
 
-        assert_draw('g', 0, self.HEIGHT - 1)
-        assert_draw('h', int(self.WIDTH / 2), self.HEIGHT - 1)
-        assert_draw('i', self.WIDTH - 1, self.HEIGHT - 1)
+        assert_draw_sprite('g', 0, self.HEIGHT - 1)
+        assert_draw_sprite('h', int(self.WIDTH / 2), self.HEIGHT - 1)
+        assert_draw_sprite('i', self.WIDTH - 1, self.HEIGHT - 1)
 
-        assert_draw('b', 0, 0)
+        assert_draw_sprite('b', 0, 0)
 
     # def test_draw_text_completely_inside(self):
     #     # TODO: write
@@ -181,11 +181,11 @@ class TestScreen(unittest.TestCase):
     #     # TODO: write
     
     def test_clear(self):
-        self.screen.draw(Sprite('a'), 0, 0)
-        self.screen.draw(Sprite('b'), self.WIDTH - 1, self.HEIGHT - 1)
-        self.screen.draw(Sprite('c'), int(self.WIDTH / 2), int(self.HEIGHT / 2))
-        self.screen.draw(Sprite('d'), int(self.WIDTH / 5), int(self.HEIGHT / 7))
-        self.screen.draw(Sprite('e'), int(self.WIDTH / 4), int(self.HEIGHT / 3))
+        self.screen.draw_sprite(Sprite('a'), 0, 0)
+        self.screen.draw_sprite(Sprite('b'), self.WIDTH - 1, self.HEIGHT - 1)
+        self.screen.draw_sprite(Sprite('c'), int(self.WIDTH / 2), int(self.HEIGHT / 2))
+        self.screen.draw_sprite(Sprite('d'), int(self.WIDTH / 5), int(self.HEIGHT / 7))
+        self.screen.draw_sprite(Sprite('e'), int(self.WIDTH / 4), int(self.HEIGHT / 3))
 
         self.screen.clear()
 
@@ -199,7 +199,7 @@ class TestScreen(unittest.TestCase):
         for y in range(self.HEIGHT):
             for x in range(self.WIDTH):
                 char = str(x * y)[:1]
-                self.screen.draw(Sprite(char), x, y)
+                self.screen.draw_sprite(Sprite(char), x, y)
                 expected_render += char
             expected_render += '\n'
 
@@ -207,9 +207,9 @@ class TestScreen(unittest.TestCase):
 
     def test_overlay_smaller_empty(self):
         top = Screen(Sprite(self.EMPTY_SPACE_CHAR), 1, 1)
-        top.draw(Sprite(self.EMPTY_SPACE_CHAR), 0, 0)
+        top.draw_sprite(Sprite(self.EMPTY_SPACE_CHAR), 0, 0)
 
-        self.screen.draw(Sprite('x'), 0, 0)
+        self.screen.draw_sprite(Sprite('x'), 0, 0)
         self.sprite_grid[0][0] = Sprite('x')
 
         top.overlay(self.screen)
@@ -218,10 +218,10 @@ class TestScreen(unittest.TestCase):
     def test_overlay_smaller_not_empty(self):
         top = Screen(Sprite(self.EMPTY_SPACE_CHAR), int(self.WIDTH / 2), int(self.HEIGHT / 2))
 
-        [top.draw(Sprite('x'), x, y)
+        [top.draw_sprite(Sprite('x'), x, y)
          for x in range(top.width) for y in range(top.height)]
 
-        [self.screen.draw(Sprite('y'), x, y)
+        [self.screen.draw_sprite(Sprite('y'), x, y)
          for x in range(self.screen.width) for y in range(self.screen.height)]
          
         def set_sprite_grid(char, x, y):
@@ -239,10 +239,10 @@ class TestScreen(unittest.TestCase):
     def test_overlay_smaller_empty(self):
         top = Screen(Sprite(self.EMPTY_SPACE_CHAR), int(self.WIDTH / 2), int(self.HEIGHT / 2))
 
-        [top.draw(Sprite(self.EMPTY_SPACE_CHAR), x, y)
+        [top.draw_sprite(Sprite(self.EMPTY_SPACE_CHAR), x, y)
          for x in range(top.width) for y in range(top.height)]
 
-        [self.screen.draw(Sprite('y'), x, y)
+        [self.screen.draw_sprite(Sprite('y'), x, y)
          for x in range(self.screen.width) for y in range(self.screen.height)]
          
         def set_sprite_grid(char, x, y):
@@ -257,11 +257,11 @@ class TestScreen(unittest.TestCase):
     def test_overlay_same_size(self):
         top = Screen(Sprite(self.EMPTY_SPACE_CHAR), int(self.WIDTH), int(self.HEIGHT))
 
-        [top.draw(Sprite('x'), x, y)
+        [top.draw_sprite(Sprite('x'), x, y)
          for x in range(int(top.width / 2), top.width)
          for y in range(int(top.height / 2), top.height)]
 
-        [self.screen.draw(Sprite('y'), x, y)
+        [self.screen.draw_sprite(Sprite('y'), x, y)
          for x in range(self.screen.width) for y in range(self.screen.height)]
          
         def set_sprite_grid(char, x, y):

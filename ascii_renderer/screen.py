@@ -38,7 +38,7 @@ class Screen(Renderable):
         """
         self._sprite_grid = [[self.empty_space_sprite for _ in range(self.width)] for _ in range(self.height)]
 
-    def draw(self, sprite: Sprite, x: int, y: int):
+    def draw_sprite(self, sprite: Sprite, x: int, y: int):
         """
         Draws the given sprite onto the screen at the given x and y coordinates
 
@@ -68,7 +68,7 @@ class Screen(Renderable):
             and self.in_frame(x + spr_x, y + spr_y)
 
         def draw(spr_x, spr_y):
-            self.draw(sprite_grid[spr_y][spr_x],
+            self.draw_sprite(sprite_grid[spr_y][spr_x],
                       x + spr_x,
                       y + spr_y)
 
@@ -90,7 +90,7 @@ class Screen(Renderable):
 
         def draw(x, y):
             sprite = self._sprite_grid[y][x]
-            base.draw(sprite, x, y)
+            base.draw_sprite(sprite, x, y)
 
         min_width = min(self.width, base.width)
         min_height = min(self.height, base.height)

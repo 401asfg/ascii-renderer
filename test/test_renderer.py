@@ -33,13 +33,13 @@ class TestRenderer(unittest.TestCase):
 
         assert_render()
 
-        self.screen.draw(Sprite('a'), 0, 0)
+        self.screen.draw_sprite(Sprite('a'), 0, 0)
 
-        self.screen.draw(Sprite('b'),
+        self.screen.draw_sprite(Sprite('b'),
                          int(self.SCREEN_WIDTH / 2),
                          int(self.SCREEN_HEIGHT / 3))
 
-        self.screen.draw(Sprite('c'),
+        self.screen.draw_sprite(Sprite('c'),
                          self.SCREEN_WIDTH - 1,
                          self.SCREEN_HEIGHT - 1)
 
