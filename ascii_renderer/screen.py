@@ -1,8 +1,7 @@
 from typing import List
-from ascii_renderer.renderable import Renderable
 
+from ascii_renderer.renderable import Renderable
 from ascii_renderer.sprite import Sprite
-from ascii_renderer.text import Text
 
 
 class Screen(Renderable):
@@ -38,7 +37,7 @@ class Screen(Renderable):
         """
         self._sprite_grid = [[self.empty_space_sprite for _ in range(self.width)] for _ in range(self.height)]
 
-    def draw_sprite(self, sprite: Sprite, x: int, y: int):
+    def draw(self, sprite: Sprite, x: int, y: int):
         """
         Draws the given sprite onto the screen at the given x and y coordinates
 
@@ -52,45 +51,21 @@ class Screen(Renderable):
 
         self._sprite_grid[y][x] = sprite
 
-    def draw_text(self, text: Text, x: int, y: int):
-        """
-        Draws the sprites of the given text onto the screen at the given x and y coordinates; doesn't draw any sprites 
-        that are empty spaces or are off the screen
-
-        :param: The text to draw
-        :param x: The x coordinate of the screen to draw the leftmost sprite of the text at
-        :param y: The y coordinate of the screen to draw the topmost sprite of the text at
-        """
-        sprite_grid = text.to_sprite_grid()
-
-        def is_valid_grid_sprite(spr_x, spr_y):
-            return sprite_grid[spr_y][spr_x] != self.empty_space_sprite \
-            and self.in_frame(x + spr_x, y + spr_y)
-
-        def draw(spr_x, spr_y):
-            self.draw_sprite(sprite_grid[spr_y][spr_x],
-                      x + spr_x,
-                      y + spr_y)
-
-        [draw(spr_x, spr_y)
-         for spr_y in range(len(sprite_grid))
-         for spr_x in range(len(sprite_grid[spr_y]))
-         if is_valid_grid_sprite(spr_x, spr_y)]
-
     def overlay(self, base: 'Screen'):
         """
-        Draw this screen on top of the given base; The top left corner of this screen is drawn at the top left corner 
-        of the base; Doesn't drawn sprites that can't fit on the base; Doesn't draw sprites if they are empty space
+        Draw this screen on top of the given base; The top left corner of this screen is drawn in the top left corner
+        of the base; Doesn't draw sprites that can't fit on the base; Doesn't draw sprites if they are empty space
 
         :param base: The base that has this screen drawn on top of it
         """
+
         def is_not_empty_space(x, y):
             sprite = self._sprite_grid[y][x]
             return sprite != self.empty_space_sprite
 
         def draw(x, y):
             sprite = self._sprite_grid[y][x]
-            base.draw_sprite(sprite, x, y)
+            base.draw(sprite, x, y)
 
         min_width = min(self.width, base.width)
         min_height = min(self.height, base.height)
